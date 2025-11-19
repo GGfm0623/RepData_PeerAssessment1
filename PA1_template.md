@@ -5,19 +5,18 @@ output:
     keep_md: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(ggplot2)
-```
+
 
 ## Loading and preprocessing the data
-```{r}
+
+``` r
 fullData <- read.csv("activity.csv")
 fullData$date <- as.Date(fullData$date, "%Y-%m-%d")
 ```
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+``` r
 # Total number of steps taken per day
 
 stepsPerDay <- aggregate(steps ~ date, fullData, FUN = sum)
@@ -29,20 +28,35 @@ g + geom_histogram(fill = "yellow", binwidth = 1000) +
 labs(title = "Histogram of Steps Taken Each Day",
 x = "Steps",
 y = "Frequency")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+``` r
 # Mean of steps
 
 stepsMean <- mean(stepsPerDay$steps, na.rm = TRUE)
 stepsMean
+```
 
+```
+## [1] 10766.19
+```
+
+``` r
 # Median of steps
 
 stepsMedian <- median(stepsPerDay$steps, na.rm = TRUE)
 stepsMedian
 ```
 
+```
+## [1] 10765
+```
+
 ## What is the average daily activity pattern?
-```{r}
+
+``` r
 # Average number of steps per 5-minute interval
 
 stepsPerInterval <- aggregate(steps ~ interval, fullData, mean, na.rm = TRUE)
@@ -54,20 +68,36 @@ h + geom_line() +
 labs(title = "Time Series Plot of Average Steps per Interval",
 x = "Interval",
 y = "Average Steps across All Days")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+``` r
 # 5-minute interval with maximum average steps
 
 maxInterval <- stepsPerInterval[which.max(stepsPerInterval$steps), ]
 maxInterval
 ```
 
+```
+##     interval    steps
+## 104      835 206.1698
+```
+
 ## Imputing missing values
-```{r}
+
+``` r
 # Number of missing values in the original dataset
 
 noMissingValue <- nrow(fullData[is.na(fullData$steps), ])
 noMissingValue
+```
 
+```
+## [1] 2304
+```
+
+``` r
 # Make a copy of the data
 
 fullData1 <- read.csv("activity.csv", header = TRUE, sep = ",")
@@ -114,20 +144,35 @@ g1 + geom_histogram(fill = "green", binwidth = 1000) +
 labs(title = "Histogram of Steps Taken Each Day (Imputed Data)",
 x = "Steps",
 y = "Frequency")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
 # Mean of total steps with imputed data
 
 stepsMeanFill <- mean(stepsPerDayFill$steps, na.rm = TRUE)
 stepsMeanFill
+```
 
+```
+## [1] 10821.21
+```
+
+``` r
 # Median of total steps with imputed data
 
 stepsMedianFill <- median(stepsPerDayFill$steps, na.rm = TRUE)
 stepsMedianFill
 ```
 
+```
+## [1] 11015
+```
+
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+``` r
 # New variable indicating weekday or weekend
 
 mergeData$DayType <- ifelse(mergeData$day %in% c("Saturday", "Sunday"),
@@ -148,4 +193,6 @@ x = "Interval",
 y = "Average Number of Steps") +
 facet_grid(DayType ~ .)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
